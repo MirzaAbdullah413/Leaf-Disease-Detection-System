@@ -1,43 +1,64 @@
 import copy
 import torch
+import zipfile
+import os
 import torch.nn as nn
 import torch.optim as optim
 from torchvision import transforms, datasets
 from torch.utils.data import DataLoader, random_split, ConcatDataset, Subset
 from tqdm.auto import tqdm
+from google.colab import drive
 
+# 1. Mount Drive
+drive.mount('/content/drive')
+
+# 2. Unzip dataset locally
+zip_path = "/content/drive/MyDrive/PlantVillage.zip"
+extract_path = "/content/PlantVillage"
+
+if not os.path.exists(extract_path):
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_path)
+    print("Extraction complete.")
+else:
+    print("Already extracted, skipping.")
+
+# Check structure before running main() — comment this out once confirmed
+!find /content/PlantVillage -maxdepth 3 -type d
 def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"Using Device: {device}")
+    # Path to your zip file in Drive
+    zip_path = "/content/drive/MyDrive/PlantVillage.zip"
 
     #Loading the DataSet
     train_dataset = datasets.ImageFolder(
-        r"D:\Coding Practice\Leaf Disease Detection System\PlantVillage\train",
+        r"/content/PlantVillage/PlantVillage/train",
         transform = transforms.ToTensor()
 
     )
     val_dataset = datasets.ImageFolder(
-        r"D:\Coding Practice\Leaf Disease Detection System\PlantVillage\val",
+        r"/content/PlantVillage/PlantVillage/val",
         transform = transforms.ToTensor()
     )
 
-    # dataset = ConcatDataset([train_dataset, val_dataset])
-    # print(len(dataset))
+    dataset = ConcatDataset([train_dataset, val_dataset])
+    print(len(dataset))
 
-    # #Initializing three tensors of shape (3,) with zeros
-    # mean = torch.zeros(3)
-    # std = torch.zeros(3)
+    #Initializing three tensors of shape (3,) with zeros
+    mean = torch.zeros(3)
+    std = torch.zeros(3)
 
-    # #computing the mean and standard deviation
-    # for image, _ in tqdm(dataset, desc="Calculating"):
-    #     mean += image.mean((1, 2))
-    #     std += image.std((1, 2))
+    #computing the mean and standard deviation
+    for image, _ in tqdm(dataset, desc="Calculating"):
+        mean += image.mean((1, 2))
+        std += image.std((1, 2))
 
-    # mean /= len(dataset)
-    # std /= len(dataset)
+    mean /= len(dataset)
+    std /= len(dataset)
 
-    mean = torch.tensor([0.4664, 0.4891, 0.4104])
-    std = torch.tensor([0.1761, 0.1500, 0.1925])
+    # mean = torch.tensor([0.4664, 0.4891, 0.4104])
+    # std = torch.tensor([0.1761, 0.1500, 0.1925])
 
     print(f"Mean: {mean}")
     print(f"Standard Deviation: {std}")
@@ -67,8 +88,8 @@ def main():
     train_dataset.transform = train_transformation
     val_dataset.transform = val_transformation
 
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=4)
-    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False, num_workers=4)
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=2)
+    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False, num_workers=2)
 
     #making a CNN Block 
     class CNNBlock(nn.Module):
@@ -196,7 +217,7 @@ def main():
         val_loader=val_loader,
         loss_function=loss_function,
         optimizer=optimizer,
-        num_epochs=5,
+        num_epochs=20,
         device= device
     )
 
