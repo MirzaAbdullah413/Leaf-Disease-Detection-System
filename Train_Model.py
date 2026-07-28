@@ -7,22 +7,9 @@ from torchvision import transforms, datasets
 from torch.utils.data import DataLoader, ConcatDataset
 from tqdm.auto import tqdm
 
-# ============================================================
-# STEP 0 — RUN THIS FIRST IN A SEPARATE CELL TO CHECK THE PATH
-# ============================================================
-# Kaggle mounts datasets read-only under /kaggle/input/<dataset-slug>/...
-# The exact folder name inside can vary, so confirm it before running main().
-#
-#   import os
-#   for root, dirs, files in os.walk("/kaggle/input"):
-#       print(root)
-#
-# You confirmed premade train/val folders exist inside the PlantVillage
-# directory, so point these at them directly.
-
-TRAIN_DIR = "/kaggle/input/plantvillage/PlantVillage/train"  # <-- update after checking structure
-VAL_DIR = "/kaggle/input/plantvillage/PlantVillage/val"      # <-- update after checking structure
-OUTPUT_DIR = "/kaggle/working"                                # Kaggle's writable output folder
+TRAIN_DIR = "/kaggle/input/plantvillage/PlantVillage/train"  
+VAL_DIR = "/kaggle/input/plantvillage/PlantVillage/val"      
+OUTPUT_DIR = "/kaggle/working"                                
 MODEL_SAVE_PATH = os.path.join(OUTPUT_DIR, "leaf_disease_model.pth")
 
 
@@ -200,7 +187,7 @@ def main():
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     torch.save({
-        "model": trained_model,   # full model object (architecture + weights), not just state_dict
+        "model": trained_model,   
         "classes": class_names,
         "mean": mean,
         "std": std,
