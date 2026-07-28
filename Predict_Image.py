@@ -1,12 +1,4 @@
-"""
-Run this on your own PC after downloading leaf_disease_model.pth from Kaggle.
 
-Setup (one time):
-    pip install torch torchvision opencv-python pillow matplotlib numpy
-
-Usage:
-    python predict_local.py path/to/model.pth path/to/leaf_image.jpg
-"""
 import sys
 import cv2
 import torch
@@ -17,7 +9,6 @@ from torchvision import transforms
 import matplotlib.pyplot as plt
 
 
-# --- Must match the architecture used during training exactly ---
 class CNNBlock(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size=3, padding=1):
         super(CNNBlock, self).__init__()
