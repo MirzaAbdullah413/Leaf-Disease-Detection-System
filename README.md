@@ -21,14 +21,14 @@ Trained on [PlantVillage](https://www.kaggle.com/datasets/mohitsingh1804/plantvi
 
 ## Repository Structure
 ```
-├── train_model_colab.py   # Training script — run on Google Colab (GPU)
-├── predict_local.py       # Inference script — run locally/offline on any machine
+├── Train_Model.py   # Training script — run on Google Colab (GPU)
+├── Predict_Image.py       # Inference script — run locally/offline on any machine
 └── README.md
 ```
 ## Setup
 ### 1. Training (Google Colab)
 1. Upload `PlantVillage.zip` (containing `PlantVillage/train` and `PlantVillage/val`) to your Google Drive under `MyDrive/`.
-2. Open `train_model_colab.py` in Google Colab.
+2. Open `Train_Model.py` in Google Colab.
 3. Run it — it will:
    - Mount your Google Drive
    - Extract the dataset locally into the Colab runtime for faster I/O
@@ -50,7 +50,7 @@ pip install torch torchvision opencv-python pillow matplotlib numpy
 
 **Run a prediction:**
 ```bash
-python predict_local.py path/to/leaf_disease_model.pth path/to/leaf_image.jpg
+python Predict_Image.py path/to/leaf_disease_model.pth path/to/leaf_image.jpg
 ```
 
 This prints the predicted class and displays a Grad-CAM heatmap overlaid on the original image, indicating the regions that most influenced the prediction. No GPU, internet, or dataset access is required at inference time — it works fully offline from the saved `.pth` file.
